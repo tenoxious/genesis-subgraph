@@ -1,71 +1,70 @@
-import { BigInt } from "@graphprotocol/graph-ts"
-import {
-  GenesisMana,
-  Approval,
-  ApprovalForAll,
-  OwnershipTransferred,
-  Transfer
-} from "../generated/GenesisMana/GenesisMana"
-import { ExampleEntity } from "../generated/schema"
+import { Transfer as TransferEvent } from '../generated/GenesisMana/GenesisMana';
+import { Mana, Transfer, Wallet } from '../generated/schema';
+import { GenesisMana } from '../generated/GenesisMana/GenesisMana';
+import { BigInt } from '@graphprotocol/graph-ts';
 
-export function handleApproval(event: Approval): void {
-  // Entities can be loaded from the store using a string ID; this ID
-  // needs to be unique across all entities of the same type
-  let entity = ExampleEntity.load(event.transaction.from.toHex())
+export function handleTransfer(event: TransferEvent): void {
+  let fromAddress = event.params.from;
+  let toAddress = event.params.to;
+  let tokenId = event.params.tokenId;
+  let fromId = fromAddress.toHex();
+  let fromWallet = Wallet.load(fromId);
 
-  // Entities only exist after they have been saved to the store;
-  // `null` checks allow to create entities on demand
-  if (!entity) {
-    entity = new ExampleEntity(event.transaction.from.toHex())
-
-    // Entity fields can be set using simple assignments
-    entity.count = BigInt.fromI32(0)
+  if (!fromWallet) {
+    fromWallet = new Wallet(fromId);
+    fromWallet.address = fromAddress;
+    fromWallet.joined = event.block.timestamp;
+    fromWallet.manasHeld = BigInt.fromI32(0);
+    fromWallet.save();
+  } else {
+    if (!isZeroAddress(fromId)) {
+      fromWallet.manasHeld = fromWallet.manasHeld.minus(BigInt.fromI32(1));
+      fromWallet.save();
+    }
   }
 
-  // BigInt and BigDecimal math are supported
-  entity.count = entity.count + BigInt.fromI32(1)
+  let toId = toAddress.toHex();
+  let toWallet = Wallet.load(toId);
+  if (!toWallet) {
+    toWallet = new Wallet(toId);
+    toWallet.address = toAddress;
+    toWallet.joined = event.block.timestamp;
+    toWallet.manasHeld = BigInt.fromI32(1);
+    toWallet.save();
+  } else {
+    toWallet.manasHeld = toWallet.manasHeld.plus(BigInt.fromI32(1));
+    toWallet.save();
+  }
 
-  // Entity fields can be set based on event parameters
-  entity.owner = event.params.owner
-  entity.approved = event.params.approved
+  let mana = Mana.load(tokenId.toString());
+  if (mana != null) {
+    mana.currentOwner = toWallet.id;
+    mana.save();
+  } else {
+    mana = new Mana(tokenId.toString());
+    let contract = GenesisMana.bind(event.address);
+    let manaDetails = contract.detailsByToken(tokenId);
+    mana.lootTokenId = manaDetails.value0;
+    mana.itemName = manaDetails.value1;
+    mana.suffixId = manaDetails.value2;
+    mana.inventoryId = manaDetails.value3;
+    mana.currentOwner = toWallet.id;
+    mana.minted = event.block.timestamp;
+    mana.save();
+  }
 
-  // Entities can be written to the store with `.save()`
-  entity.save()
+  let transfer = new Transfer(
+    event.transaction.hash.toHex() + '-' + event.logIndex.toString()
+  );
 
-  // Note: If a handler doesn't require existing field values, it is faster
-  // _not_ to load the entity from the store. Instead, create it fresh with
-  // `new Entity(...)`, set the fields that should be updated and save the
-  // entity back to the store. Fields that were not set or unset remain
-  // unchanged, allowing for partial updates to be applied.
-
-  // It is also possible to access smart contracts from mappings. For
-  // example, the contract that has emitted the event can be connected to
-  // with:
-  //
-  // let contract = Contract.bind(event.address)
-  //
-  // The following functions can then be called on this contract to access
-  // state variables and other data:
-  //
-  // - contract.balanceOf(...)
-  // - contract.claimedLootTokenId(...)
-  // - contract.detailsByToken(...)
-  // - contract.getApproved(...)
-  // - contract.isApprovedForAll(...)
-  // - contract.lostGenesisManaTotal(...)
-  // - contract.name(...)
-  // - contract.owner(...)
-  // - contract.ownerOf(...)
-  // - contract.supportsInterface(...)
-  // - contract.symbol(...)
-  // - contract.tokenByIndex(...)
-  // - contract.tokenOfOwnerByIndex(...)
-  // - contract.tokenURI(...)
-  // - contract.totalSupply(...)
+  transfer.mana = tokenId.toString();
+  transfer.from = fromWallet.id;
+  transfer.to = toWallet.id;
+  transfer.txHash = event.transaction.hash;
+  transfer.timestamp = event.block.timestamp;
+  transfer.save();
 }
 
-export function handleApprovalForAll(event: ApprovalForAll): void {}
-
-export function handleOwnershipTransferred(event: OwnershipTransferred): void {}
-
-export function handleTransfer(event: Transfer): void {}
+function isZeroAddress(string: string): boolean {
+  return string == '0x0000000000000000000000000000000000000000';
+}

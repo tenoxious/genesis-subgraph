@@ -1,0 +1,43 @@
+type _Schema_
+  @fulltext(
+    name: "search"
+    language: en
+    algorithm: rank
+    include: [
+      {
+        entity: "Mana"
+        fields: [
+        { name: "lootTokenId" }
+        { name: "suffixId" }
+        { name: "inventoryId" }
+        ]
+      }
+    ]
+  )
+
+type Mana @entity {
+  id: ID!
+  lootTokenId: BigInt!
+  itemName: String!
+  suffixId: Int!
+  inventoryId: Int!
+  currentOwner: Wallet!
+  minted: BigInt!
+}
+
+type Wallet @entity {
+  id: ID!
+  address: Bytes!
+  manas: [Mana!]! @derivedFrom(field: "currentOwner")
+  manasHeld: BigInt!
+  joined: BigInt!
+}
+
+type Transfer @entity {
+  id: ID!
+  mana: Mana!
+  from: Wallet!
+  to: Wallet!
+  txHash: Bytes!
+  timestamp: BigInt!
+}

@@ -1,6 +1,27 @@
-type ExampleEntity @entity {
+
+type Mana @entity {
   id: ID!
-  count: BigInt!
-  owner: Bytes! # address
-  approved: Bytes! # address
+  lootTokenId: BigInt!
+  itemName: String!
+  suffixId: Int!
+  inventoryId: Int!
+  currentOwner: Wallet!
+  minted: BigInt!
+}
+
+type Wallet @entity {
+  id: ID!
+  address: Bytes!
+  manas: [Mana!]! @derivedFrom(field: "currentOwner")
+  manasHeld: BigInt!
+  joined: BigInt!
+}
+
+type Transfer @entity {
+  id: ID!
+  mana: Mana!
+  from: Wallet!
+  to: Wallet!
+  txHash: Bytes!
+  timestamp: BigInt!
 }

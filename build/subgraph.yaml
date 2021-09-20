@@ -1,0 +1,25 @@
+specVersion: 0.0.2
+schema:
+  file: schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: GenesisMana
+    network: mainnet
+    source:
+      address: "0xf4b6040a4b1b30f1d1691699a8f3bf957b03e463"
+      abi: GenesisMana
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Mana
+        - Transfer
+        - Wallet
+      abis:
+        - name: GenesisMana
+          file: GenesisMana/abis/GenesisMana.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: GenesisMana/GenesisMana.wasm
