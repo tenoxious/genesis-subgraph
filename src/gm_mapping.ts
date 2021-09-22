@@ -1,5 +1,5 @@
 import { Transfer as TransferEvent } from '../generated/GenesisMana/GenesisMana';
-import { Mana, Transfer, Wallet } from '../generated/schema';
+import { Mana, Bag, Transfer, Wallet } from '../generated/schema';
 import { GenesisMana } from '../generated/GenesisMana/GenesisMana';
 import { BigInt } from '@graphprotocol/graph-ts';
 
@@ -9,6 +9,7 @@ export function handleTransfer(event: TransferEvent): void {
   let tokenId = event.params.tokenId;
   let fromId = fromAddress.toHex();
   let fromWallet = Wallet.load(fromId);
+  let lootTokenId = "";
 
   if (!fromWallet) {
     fromWallet = new Wallet(fromId);
@@ -44,13 +45,21 @@ export function handleTransfer(event: TransferEvent): void {
     mana = new Mana(tokenId.toString());
     let contract = GenesisMana.bind(event.address);
     let manaDetails = contract.detailsByToken(tokenId);
-    mana.lootTokenId = manaDetails.value0;
+    lootTokenId =  manaDetails.value0.toString();
+
+    mana.lootTokenId = lootTokenId
     mana.itemName = manaDetails.value1;
     mana.suffixId = manaDetails.value2;
     mana.inventoryId = manaDetails.value3;
     mana.currentOwner = toWallet.id;
     mana.minted = event.block.timestamp;
     mana.save();
+  }
+  let bag = Bag.load(lootTokenId);
+  if (bag != null) {
+    if (bag.manasClaimed)
+      bag.manasClaimed = bag.manasClaimed.plus(BigInt.fromI32(1));
+    bag.save();
   }
 
   let transfer = new Transfer(
@@ -63,6 +72,7 @@ export function handleTransfer(event: TransferEvent): void {
   transfer.txHash = event.transaction.hash;
   transfer.timestamp = event.block.timestamp;
   transfer.save();
+
 }
 
 function isZeroAddress(string: string): boolean {

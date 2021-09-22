@@ -17,7 +17,7 @@ export class Mana extends Entity {
     super();
     this.set("id", Value.fromString(id));
 
-    this.set("lootTokenId", Value.fromBigInt(BigInt.zero()));
+    this.set("lootTokenId", Value.fromString(""));
     this.set("itemName", Value.fromString(""));
     this.set("suffixId", Value.fromI32(0));
     this.set("inventoryId", Value.fromI32(0));
@@ -51,13 +51,13 @@ export class Mana extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get lootTokenId(): BigInt {
+  get lootTokenId(): string {
     let value = this.get("lootTokenId");
-    return value!.toBigInt();
+    return value!.toString();
   }
 
-  set lootTokenId(value: BigInt) {
-    this.set("lootTokenId", Value.fromBigInt(value));
+  set lootTokenId(value: string) {
+    this.set("lootTokenId", Value.fromString(value));
   }
 
   get itemName(): string {
@@ -106,6 +106,239 @@ export class Mana extends Entity {
   }
 }
 
+export class Bag extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("chest", Value.fromString(""));
+    this.set("foot", Value.fromString(""));
+    this.set("hand", Value.fromString(""));
+    this.set("head", Value.fromString(""));
+    this.set("neck", Value.fromString(""));
+    this.set("ring", Value.fromString(""));
+    this.set("waist", Value.fromString(""));
+    this.set("weapon", Value.fromString(""));
+    this.set("chestSuffixId", Value.fromI32(0));
+    this.set("footSuffixId", Value.fromI32(0));
+    this.set("handSuffixId", Value.fromI32(0));
+    this.set("headSuffixId", Value.fromI32(0));
+    this.set("neckSuffixId", Value.fromI32(0));
+    this.set("ringSuffixId", Value.fromI32(0));
+    this.set("waistSuffixId", Value.fromI32(0));
+    this.set("weaponSuffixId", Value.fromI32(0));
+    this.set("currentOwner", Value.fromString(""));
+    this.set("minted", Value.fromBigInt(BigInt.zero()));
+    this.set("manasClaimed", Value.fromBigInt(BigInt.zero()));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save Bag entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save Bag entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("Bag", id.toString(), this);
+    }
+  }
+
+  static load(id: string): Bag | null {
+    return changetype<Bag | null>(store.get("Bag", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get chest(): string {
+    let value = this.get("chest");
+    return value!.toString();
+  }
+
+  set chest(value: string) {
+    this.set("chest", Value.fromString(value));
+  }
+
+  get foot(): string {
+    let value = this.get("foot");
+    return value!.toString();
+  }
+
+  set foot(value: string) {
+    this.set("foot", Value.fromString(value));
+  }
+
+  get hand(): string {
+    let value = this.get("hand");
+    return value!.toString();
+  }
+
+  set hand(value: string) {
+    this.set("hand", Value.fromString(value));
+  }
+
+  get head(): string {
+    let value = this.get("head");
+    return value!.toString();
+  }
+
+  set head(value: string) {
+    this.set("head", Value.fromString(value));
+  }
+
+  get neck(): string {
+    let value = this.get("neck");
+    return value!.toString();
+  }
+
+  set neck(value: string) {
+    this.set("neck", Value.fromString(value));
+  }
+
+  get ring(): string {
+    let value = this.get("ring");
+    return value!.toString();
+  }
+
+  set ring(value: string) {
+    this.set("ring", Value.fromString(value));
+  }
+
+  get waist(): string {
+    let value = this.get("waist");
+    return value!.toString();
+  }
+
+  set waist(value: string) {
+    this.set("waist", Value.fromString(value));
+  }
+
+  get weapon(): string {
+    let value = this.get("weapon");
+    return value!.toString();
+  }
+
+  set weapon(value: string) {
+    this.set("weapon", Value.fromString(value));
+  }
+
+  get chestSuffixId(): i32 {
+    let value = this.get("chestSuffixId");
+    return value!.toI32();
+  }
+
+  set chestSuffixId(value: i32) {
+    this.set("chestSuffixId", Value.fromI32(value));
+  }
+
+  get footSuffixId(): i32 {
+    let value = this.get("footSuffixId");
+    return value!.toI32();
+  }
+
+  set footSuffixId(value: i32) {
+    this.set("footSuffixId", Value.fromI32(value));
+  }
+
+  get handSuffixId(): i32 {
+    let value = this.get("handSuffixId");
+    return value!.toI32();
+  }
+
+  set handSuffixId(value: i32) {
+    this.set("handSuffixId", Value.fromI32(value));
+  }
+
+  get headSuffixId(): i32 {
+    let value = this.get("headSuffixId");
+    return value!.toI32();
+  }
+
+  set headSuffixId(value: i32) {
+    this.set("headSuffixId", Value.fromI32(value));
+  }
+
+  get neckSuffixId(): i32 {
+    let value = this.get("neckSuffixId");
+    return value!.toI32();
+  }
+
+  set neckSuffixId(value: i32) {
+    this.set("neckSuffixId", Value.fromI32(value));
+  }
+
+  get ringSuffixId(): i32 {
+    let value = this.get("ringSuffixId");
+    return value!.toI32();
+  }
+
+  set ringSuffixId(value: i32) {
+    this.set("ringSuffixId", Value.fromI32(value));
+  }
+
+  get waistSuffixId(): i32 {
+    let value = this.get("waistSuffixId");
+    return value!.toI32();
+  }
+
+  set waistSuffixId(value: i32) {
+    this.set("waistSuffixId", Value.fromI32(value));
+  }
+
+  get weaponSuffixId(): i32 {
+    let value = this.get("weaponSuffixId");
+    return value!.toI32();
+  }
+
+  set weaponSuffixId(value: i32) {
+    this.set("weaponSuffixId", Value.fromI32(value));
+  }
+
+  get currentOwner(): string {
+    let value = this.get("currentOwner");
+    return value!.toString();
+  }
+
+  set currentOwner(value: string) {
+    this.set("currentOwner", Value.fromString(value));
+  }
+
+  get minted(): BigInt {
+    let value = this.get("minted");
+    return value!.toBigInt();
+  }
+
+  set minted(value: BigInt) {
+    this.set("minted", Value.fromBigInt(value));
+  }
+
+  get manas(): Array<string> {
+    let value = this.get("manas");
+    return value!.toStringArray();
+  }
+
+  set manas(value: Array<string>) {
+    this.set("manas", Value.fromStringArray(value));
+  }
+
+  get manasClaimed(): BigInt {
+    let value = this.get("manasClaimed");
+    return value!.toBigInt();
+  }
+
+  set manasClaimed(value: BigInt) {
+    this.set("manasClaimed", Value.fromBigInt(value));
+  }
+}
+
 export class Wallet extends Entity {
   constructor(id: string) {
     super();
@@ -113,6 +346,7 @@ export class Wallet extends Entity {
 
     this.set("address", Value.fromBytes(Bytes.empty()));
     this.set("manasHeld", Value.fromBigInt(BigInt.zero()));
+    this.set("bagsHeld", Value.fromBigInt(BigInt.zero()));
     this.set("joined", Value.fromBigInt(BigInt.zero()));
   }
 
@@ -160,6 +394,15 @@ export class Wallet extends Entity {
     this.set("manas", Value.fromStringArray(value));
   }
 
+  get bags(): Array<string> {
+    let value = this.get("bags");
+    return value!.toStringArray();
+  }
+
+  set bags(value: Array<string>) {
+    this.set("bags", Value.fromStringArray(value));
+  }
+
   get manasHeld(): BigInt {
     let value = this.get("manasHeld");
     return value!.toBigInt();
@@ -167,6 +410,15 @@ export class Wallet extends Entity {
 
   set manasHeld(value: BigInt) {
     this.set("manasHeld", Value.fromBigInt(value));
+  }
+
+  get bagsHeld(): BigInt {
+    let value = this.get("bagsHeld");
+    return value!.toBigInt();
+  }
+
+  set bagsHeld(value: BigInt) {
+    this.set("bagsHeld", Value.fromBigInt(value));
   }
 
   get joined(): BigInt {
@@ -185,6 +437,7 @@ export class Transfer extends Entity {
     this.set("id", Value.fromString(id));
 
     this.set("mana", Value.fromString(""));
+    this.set("bag", Value.fromString(""));
     this.set("from", Value.fromString(""));
     this.set("to", Value.fromString(""));
     this.set("txHash", Value.fromBytes(Bytes.empty()));
@@ -224,6 +477,15 @@ export class Transfer extends Entity {
 
   set mana(value: string) {
     this.set("mana", Value.fromString(value));
+  }
+
+  get bag(): string {
+    let value = this.get("bag");
+    return value!.toString();
+  }
+
+  set bag(value: string) {
+    this.set("bag", Value.fromString(value));
   }
 
   get from(): string {

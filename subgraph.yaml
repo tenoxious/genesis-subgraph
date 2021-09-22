@@ -3,6 +3,28 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
+    name: Loot
+    network: mainnet
+    source:
+      address: '0xff9c1b15b16263c61d017ee9f65c50e4ae0113d7'
+      abi: Loot
+      startBlock: 13108876
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Bag
+        - Transfer
+        - Wallet
+      abis:
+        - name: Loot
+          file: ./abis/Loot.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/loot_mapping.ts
+  - kind: ethereum/contract
     name: GenesisMana
     network: mainnet
     source:
@@ -22,4 +44,4 @@ dataSources:
       eventHandlers:
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
-      file: ./src/mapping.ts
+      file: ./src/gm_mapping.ts

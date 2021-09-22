@@ -1,23 +1,7 @@
-type _Schema_
-  @fulltext(
-    name: "search"
-    language: en
-    algorithm: rank
-    include: [
-      {
-        entity: "Mana"
-        fields: [
-        { name: "lootTokenId" }
-        { name: "suffixId" }
-        { name: "inventoryId" }
-        ]
-      }
-    ]
-  )
 
 type Mana @entity {
   id: ID!
-  lootTokenId: BigInt!
+  lootTokenId: Bag!
   itemName: String!
   suffixId: Int!
   inventoryId: Int!
@@ -25,17 +9,44 @@ type Mana @entity {
   minted: BigInt!
 }
 
+type Bag @entity {
+  id: ID!
+  chest: String!
+  foot: String!
+  hand: String!
+  head: String!
+  neck: String!
+  ring: String!
+  waist: String!
+  weapon: String!
+  chestSuffixId: Int!
+  footSuffixId: Int!
+  handSuffixId: Int!
+  headSuffixId: Int!
+  neckSuffixId: Int!
+  ringSuffixId: Int!
+  waistSuffixId: Int!
+  weaponSuffixId: Int!
+  currentOwner: Wallet!
+  minted: BigInt!
+  manas: [Mana!]! @derivedFrom(field: "lootTokenId")
+  manasClaimed: BigInt!
+}
+
 type Wallet @entity {
   id: ID!
   address: Bytes!
   manas: [Mana!]! @derivedFrom(field: "currentOwner")
+  bags: [Bag!]! @derivedFrom(field: "currentOwner")
   manasHeld: BigInt!
+  bagsHeld: BigInt!
   joined: BigInt!
 }
 
 type Transfer @entity {
   id: ID!
   mana: Mana!
+  bag: Bag!
   from: Wallet!
   to: Wallet!
   txHash: Bytes!
