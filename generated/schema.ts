@@ -19,7 +19,7 @@ export class Mana extends Entity {
 
     this.set("lootTokenId", Value.fromString(""));
     this.set("itemName", Value.fromString(""));
-    this.set("suffixId", Value.fromI32(0));
+    this.set("suffixId", Value.fromString(""));
     this.set("inventoryId", Value.fromI32(0));
     this.set("currentOwner", Value.fromString(""));
     this.set("minted", Value.fromBigInt(BigInt.zero()));
@@ -69,13 +69,13 @@ export class Mana extends Entity {
     this.set("itemName", Value.fromString(value));
   }
 
-  get suffixId(): i32 {
+  get suffixId(): string {
     let value = this.get("suffixId");
-    return value!.toI32();
+    return value!.toString();
   }
 
-  set suffixId(value: i32) {
-    this.set("suffixId", Value.fromI32(value));
+  set suffixId(value: string) {
+    this.set("suffixId", Value.fromString(value));
   }
 
   get inventoryId(): i32 {
@@ -103,6 +103,59 @@ export class Mana extends Entity {
 
   set minted(value: BigInt) {
     this.set("minted", Value.fromBigInt(value));
+  }
+}
+
+export class Order extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("manasHeld", Value.fromBigInt(BigInt.zero()));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save Order entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save Order entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("Order", id.toString(), this);
+    }
+  }
+
+  static load(id: string): Order | null {
+    return changetype<Order | null>(store.get("Order", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get manas(): Array<string> {
+    let value = this.get("manas");
+    return value!.toStringArray();
+  }
+
+  set manas(value: Array<string>) {
+    this.set("manas", Value.fromStringArray(value));
+  }
+
+  get manasHeld(): BigInt {
+    let value = this.get("manasHeld");
+    return value!.toBigInt();
+  }
+
+  set manasHeld(value: BigInt) {
+    this.set("manasHeld", Value.fromBigInt(value));
   }
 }
 

@@ -1,5 +1,5 @@
 import { Transfer as TransferEvent } from '../generated/GenesisMana/GenesisMana';
-import { Mana, Bag, Transfer, Wallet } from '../generated/schema';
+import { Mana, Order, Bag, Transfer, Wallet } from '../generated/schema';
 import { GenesisMana } from '../generated/GenesisMana/GenesisMana';
 import { BigInt } from '@graphprotocol/graph-ts';
 
@@ -10,6 +10,7 @@ export function handleTransfer(event: TransferEvent): void {
   let fromId = fromAddress.toHex();
   let fromWallet = Wallet.load(fromId);
   let lootTokenId = "";
+  let orderId = "";
 
   if (!fromWallet) {
     fromWallet = new Wallet(fromId);
@@ -46,15 +47,28 @@ export function handleTransfer(event: TransferEvent): void {
     let contract = GenesisMana.bind(event.address);
     let manaDetails = contract.detailsByToken(tokenId);
     lootTokenId =  manaDetails.value0.toString();
+    orderId = manaDetails.value2.toString();
 
     mana.lootTokenId = lootTokenId
     mana.itemName = manaDetails.value1;
-    mana.suffixId = manaDetails.value2;
+    mana.suffixId = orderId;
     mana.inventoryId = manaDetails.value3;
     mana.currentOwner = toWallet.id;
     mana.minted = event.block.timestamp;
     mana.save();
+
+
+    let order = Order.load(mana.suffixId);
+    if (!order) {
+      order = new Order(mana.suffixId);
+      order.manasHeld = BigInt.fromI32(1);
+      order.save();
+    } else {
+      order.manasHeld = order.manasHeld.plus(BigInt.fromI32(1));
+      order.save();
+    }
   }
+
   let bag = Bag.load(lootTokenId);
   if (bag != null) {
     if (bag.manasClaimed)

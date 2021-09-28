@@ -36,6 +36,7 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - Mana
+        - Order
         - Transfer
         - Wallet
       abis:
