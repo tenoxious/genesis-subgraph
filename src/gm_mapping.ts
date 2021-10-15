@@ -49,7 +49,7 @@ export function handleTransfer(event: TransferEvent): void {
     lootTokenId =  manaDetails.value0.toString();
     orderId = manaDetails.value2.toString();
 
-    mana.lootTokenId = lootTokenId
+    mana.lootTokenId = lootTokenId;
     mana.itemName = manaDetails.value1;
     mana.suffixId = orderId;
     mana.inventoryId = manaDetails.value3;
@@ -69,11 +69,14 @@ export function handleTransfer(event: TransferEvent): void {
     }
   }
 
-  let bag = Bag.load(lootTokenId);
-  if (bag != null) {
-    if (bag.manasClaimed)
-      bag.manasClaimed = bag.manasClaimed.plus(BigInt.fromI32(1));
-    bag.save();
+  if (lootTokenId != "0") {
+    let bag = Bag.load(lootTokenId);
+    if (bag != null) {
+      if (bag.manasClaimed)
+        bag.manasClaimed = bag.manasClaimed.plus(BigInt.fromI32(1));
+      bag.manasUnclaimed = bag.manasUnclaimed.minus(BigInt.fromI32(1));
+      bag.save();
+    }
   }
 
   let transfer = new Transfer(

@@ -50,11 +50,13 @@ export function handleTransfer(event: TransferEvent): void {
     bag = new Bag(tokenId.toString());
     let contract = Loot.bind(event.address);
     let item:string;
+    bag.manasTotalCount = BigInt.fromI32(0);
 
     item = contract.getChest(tokenId);
     bag.chest = item;
     if (item.includes("of ")) {
       bag.chestSuffixId = suffixArray.indexOf(item.split("of ")[1].split(" +1")[0]);
+      bag.manasTotalCount = bag.manasTotalCount.plus(BigInt.fromI32(1));
     } else
       bag.chestSuffixId = 0;
 
@@ -62,6 +64,7 @@ export function handleTransfer(event: TransferEvent): void {
     bag.foot = item;
     if (item.includes("of ")) {
       bag.footSuffixId = suffixArray.indexOf(item.split("of ")[1].split(" +1")[0]);
+      bag.manasTotalCount = bag.manasTotalCount.plus(BigInt.fromI32(1));
     } else
       bag.footSuffixId = 0;
 
@@ -69,6 +72,7 @@ export function handleTransfer(event: TransferEvent): void {
     bag.hand = item;
     if (item.includes("of ")) {
       bag.handSuffixId = suffixArray.indexOf(item.split("of ")[1].split(" +1")[0]);
+      bag.manasTotalCount = bag.manasTotalCount.plus(BigInt.fromI32(1));
     } else
       bag.handSuffixId = 0;
 
@@ -76,6 +80,7 @@ export function handleTransfer(event: TransferEvent): void {
     bag.head = item;
     if (item.includes("of ")) {
       bag.headSuffixId = suffixArray.indexOf(item.split("of ")[1].split(" +1")[0]);
+      bag.manasTotalCount = bag.manasTotalCount.plus(BigInt.fromI32(1));
     } else
       bag.headSuffixId = 0;
 
@@ -83,6 +88,7 @@ export function handleTransfer(event: TransferEvent): void {
     bag.neck = item;
     if (item.includes("of ")) {
       bag.neckSuffixId = suffixArray.indexOf(item.split("of ")[1].split(" +1")[0]);
+      bag.manasTotalCount = bag.manasTotalCount.plus(BigInt.fromI32(1));
     } else
       bag.neckSuffixId = 0;
 
@@ -90,6 +96,7 @@ export function handleTransfer(event: TransferEvent): void {
     bag.ring = item;
     if (item.includes("of ")) {
       bag.ringSuffixId = suffixArray.indexOf(item.split("of ")[1].split(" +1")[0]);
+      bag.manasTotalCount = bag.manasTotalCount.plus(BigInt.fromI32(1));
     } else
       bag.ringSuffixId = 0;
 
@@ -97,6 +104,7 @@ export function handleTransfer(event: TransferEvent): void {
     bag.waist = item;
     if (item.includes("of ")) {
       bag.waistSuffixId = suffixArray.indexOf(item.split("of ")[1].split(" +1")[0]);
+      bag.manasTotalCount = bag.manasTotalCount.plus(BigInt.fromI32(1));
     } else
       bag.waistSuffixId = 0;
 
@@ -104,12 +112,14 @@ export function handleTransfer(event: TransferEvent): void {
     bag.weapon = item;
     if (item.includes("of ")) {
       bag.weaponSuffixId = suffixArray.indexOf(item.split("of ")[1].split(" +1")[0]);
+      bag.manasTotalCount = bag.manasTotalCount.plus(BigInt.fromI32(1));
     } else
       bag.weaponSuffixId = 0;
 
     bag.currentOwner = toWallet.id;
     bag.minted = event.block.timestamp;
     bag.manasClaimed = BigInt.fromI32(0);
+    bag.manasUnclaimed = bag.manasTotalCount;
     bag.save();
   }
 

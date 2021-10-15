@@ -17,7 +17,6 @@ export class Mana extends Entity {
     super();
     this.set("id", Value.fromString(id));
 
-    this.set("lootTokenId", Value.fromString(""));
     this.set("itemName", Value.fromString(""));
     this.set("suffixId", Value.fromString(""));
     this.set("inventoryId", Value.fromI32(0));
@@ -51,13 +50,21 @@ export class Mana extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get lootTokenId(): string {
+  get lootTokenId(): string | null {
     let value = this.get("lootTokenId");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
   }
 
-  set lootTokenId(value: string) {
-    this.set("lootTokenId", Value.fromString(value));
+  set lootTokenId(value: string | null) {
+    if (!value) {
+      this.unset("lootTokenId");
+    } else {
+      this.set("lootTokenId", Value.fromString(<string>value));
+    }
   }
 
   get itemName(): string {
@@ -183,6 +190,8 @@ export class Bag extends Entity {
     this.set("currentOwner", Value.fromString(""));
     this.set("minted", Value.fromBigInt(BigInt.zero()));
     this.set("manasClaimed", Value.fromBigInt(BigInt.zero()));
+    this.set("manasUnclaimed", Value.fromBigInt(BigInt.zero()));
+    this.set("manasTotalCount", Value.fromBigInt(BigInt.zero()));
   }
 
   save(): void {
@@ -389,6 +398,24 @@ export class Bag extends Entity {
 
   set manasClaimed(value: BigInt) {
     this.set("manasClaimed", Value.fromBigInt(value));
+  }
+
+  get manasUnclaimed(): BigInt {
+    let value = this.get("manasUnclaimed");
+    return value!.toBigInt();
+  }
+
+  set manasUnclaimed(value: BigInt) {
+    this.set("manasUnclaimed", Value.fromBigInt(value));
+  }
+
+  get manasTotalCount(): BigInt {
+    let value = this.get("manasTotalCount");
+    return value!.toBigInt();
+  }
+
+  set manasTotalCount(value: BigInt) {
+    this.set("manasTotalCount", Value.fromBigInt(value));
   }
 }
 

@@ -1,7 +1,7 @@
 
 type Mana @entity {
   id: ID!
-  lootTokenId: Bag!
+  lootTokenId: Bag
   itemName: String!
   suffixId: Order!
   inventoryId: Int!
@@ -37,6 +37,8 @@ type Bag @entity {
   minted: BigInt!
   manas: [Mana!]! @derivedFrom(field: "lootTokenId")
   manasClaimed: BigInt!
+  manasUnclaimed: BigInt!
+  manasTotalCount: BigInt!
 }
 
 type Wallet @entity {
