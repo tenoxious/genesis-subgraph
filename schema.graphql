@@ -9,10 +9,30 @@ type Mana @entity {
   minted: BigInt!
 }
 
+type Adventurer @entity {
+  id: ID!
+  chest: String!
+  foot: String!
+  hand: String!
+  head: String!
+  neck: String!
+  ring: String!
+  waist: String!
+  weapon: String!
+  order: String!
+  suffixId: Order!
+  orderColor: String!
+  orderCount: String!
+  currentOwner: Wallet!
+  minted: BigInt!
+}
+
 type Order @entity {
   id: ID!
   manas: [Mana!]! @derivedFrom(field: "suffixId")
   manasHeld: BigInt!
+  adventurers: [Adventurer!]! @derivedFrom(field: "suffixId")
+  adventurersHeld: BigInt!
 }
 
 type Bag @entity {
@@ -44,17 +64,20 @@ type Bag @entity {
 type Wallet @entity {
   id: ID!
   address: Bytes!
-  manas: [Mana!]! @derivedFrom(field: "currentOwner")
-  bags: [Bag!]! @derivedFrom(field: "currentOwner")
+  manas: [Mana!] @derivedFrom(field: "currentOwner")
+  bags: [Bag!] @derivedFrom(field: "currentOwner")
+  adventurers: [Adventurer!] @derivedFrom(field: "currentOwner")
   manasHeld: BigInt!
   bagsHeld: BigInt!
+  adventurersHeld: BigInt!
   joined: BigInt!
 }
 
 type Transfer @entity {
   id: ID!
-  mana: Mana!
-  bag: Bag!
+  mana: Mana
+  bag: Bag
+  adventurer: Adventurer
   from: Wallet!
   to: Wallet!
   txHash: Bytes!

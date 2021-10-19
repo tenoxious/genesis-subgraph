@@ -7,8 +7,6 @@ export function handleTransfer(event: TransferEvent): void {
   let fromAddress = event.params.from;
   let toAddress = event.params.to;
   let tokenId = event.params.tokenId;
-  let fromId = fromAddress.toHex();
-  let fromWallet = Wallet.load(fromId);
   let suffixArray = ["","Power","Giants",
     "Titans","Skill","Perfection",
     "Brilliance","Enlightenment","Protection",
@@ -16,6 +14,8 @@ export function handleTransfer(event: TransferEvent): void {
     "the Fox","Detection","Reflection",
     "the Twins"];
 
+  let fromId = fromAddress.toHex();
+  let fromWallet = Wallet.load(fromId);
   if (!fromWallet) {
     fromWallet = new Wallet(fromId);
     fromWallet.address = fromAddress;
@@ -35,6 +35,7 @@ export function handleTransfer(event: TransferEvent): void {
     toWallet = new Wallet(toId);
     toWallet.address = toAddress;
     toWallet.joined = event.block.timestamp;
+    toWallet.bagsHeld = BigInt.fromI32(1);
     toWallet.bagsHeld = BigInt.fromI32(1);
     toWallet.save();
   } else {

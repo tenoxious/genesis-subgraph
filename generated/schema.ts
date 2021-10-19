@@ -113,12 +113,187 @@ export class Mana extends Entity {
   }
 }
 
+export class Adventurer extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("chest", Value.fromString(""));
+    this.set("foot", Value.fromString(""));
+    this.set("hand", Value.fromString(""));
+    this.set("head", Value.fromString(""));
+    this.set("neck", Value.fromString(""));
+    this.set("ring", Value.fromString(""));
+    this.set("waist", Value.fromString(""));
+    this.set("weapon", Value.fromString(""));
+    this.set("order", Value.fromString(""));
+    this.set("suffixId", Value.fromString(""));
+    this.set("orderColor", Value.fromString(""));
+    this.set("orderCount", Value.fromString(""));
+    this.set("currentOwner", Value.fromString(""));
+    this.set("minted", Value.fromBigInt(BigInt.zero()));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save Adventurer entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save Adventurer entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("Adventurer", id.toString(), this);
+    }
+  }
+
+  static load(id: string): Adventurer | null {
+    return changetype<Adventurer | null>(store.get("Adventurer", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get chest(): string {
+    let value = this.get("chest");
+    return value!.toString();
+  }
+
+  set chest(value: string) {
+    this.set("chest", Value.fromString(value));
+  }
+
+  get foot(): string {
+    let value = this.get("foot");
+    return value!.toString();
+  }
+
+  set foot(value: string) {
+    this.set("foot", Value.fromString(value));
+  }
+
+  get hand(): string {
+    let value = this.get("hand");
+    return value!.toString();
+  }
+
+  set hand(value: string) {
+    this.set("hand", Value.fromString(value));
+  }
+
+  get head(): string {
+    let value = this.get("head");
+    return value!.toString();
+  }
+
+  set head(value: string) {
+    this.set("head", Value.fromString(value));
+  }
+
+  get neck(): string {
+    let value = this.get("neck");
+    return value!.toString();
+  }
+
+  set neck(value: string) {
+    this.set("neck", Value.fromString(value));
+  }
+
+  get ring(): string {
+    let value = this.get("ring");
+    return value!.toString();
+  }
+
+  set ring(value: string) {
+    this.set("ring", Value.fromString(value));
+  }
+
+  get waist(): string {
+    let value = this.get("waist");
+    return value!.toString();
+  }
+
+  set waist(value: string) {
+    this.set("waist", Value.fromString(value));
+  }
+
+  get weapon(): string {
+    let value = this.get("weapon");
+    return value!.toString();
+  }
+
+  set weapon(value: string) {
+    this.set("weapon", Value.fromString(value));
+  }
+
+  get order(): string {
+    let value = this.get("order");
+    return value!.toString();
+  }
+
+  set order(value: string) {
+    this.set("order", Value.fromString(value));
+  }
+
+  get suffixId(): string {
+    let value = this.get("suffixId");
+    return value!.toString();
+  }
+
+  set suffixId(value: string) {
+    this.set("suffixId", Value.fromString(value));
+  }
+
+  get orderColor(): string {
+    let value = this.get("orderColor");
+    return value!.toString();
+  }
+
+  set orderColor(value: string) {
+    this.set("orderColor", Value.fromString(value));
+  }
+
+  get orderCount(): string {
+    let value = this.get("orderCount");
+    return value!.toString();
+  }
+
+  set orderCount(value: string) {
+    this.set("orderCount", Value.fromString(value));
+  }
+
+  get currentOwner(): string {
+    let value = this.get("currentOwner");
+    return value!.toString();
+  }
+
+  set currentOwner(value: string) {
+    this.set("currentOwner", Value.fromString(value));
+  }
+
+  get minted(): BigInt {
+    let value = this.get("minted");
+    return value!.toBigInt();
+  }
+
+  set minted(value: BigInt) {
+    this.set("minted", Value.fromBigInt(value));
+  }
+}
+
 export class Order extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
 
     this.set("manasHeld", Value.fromBigInt(BigInt.zero()));
+    this.set("adventurersHeld", Value.fromBigInt(BigInt.zero()));
   }
 
   save(): void {
@@ -163,6 +338,24 @@ export class Order extends Entity {
 
   set manasHeld(value: BigInt) {
     this.set("manasHeld", Value.fromBigInt(value));
+  }
+
+  get adventurers(): Array<string> {
+    let value = this.get("adventurers");
+    return value!.toStringArray();
+  }
+
+  set adventurers(value: Array<string>) {
+    this.set("adventurers", Value.fromStringArray(value));
+  }
+
+  get adventurersHeld(): BigInt {
+    let value = this.get("adventurersHeld");
+    return value!.toBigInt();
+  }
+
+  set adventurersHeld(value: BigInt) {
+    this.set("adventurersHeld", Value.fromBigInt(value));
   }
 }
 
@@ -427,6 +620,7 @@ export class Wallet extends Entity {
     this.set("address", Value.fromBytes(Bytes.empty()));
     this.set("manasHeld", Value.fromBigInt(BigInt.zero()));
     this.set("bagsHeld", Value.fromBigInt(BigInt.zero()));
+    this.set("adventurersHeld", Value.fromBigInt(BigInt.zero()));
     this.set("joined", Value.fromBigInt(BigInt.zero()));
   }
 
@@ -465,22 +659,55 @@ export class Wallet extends Entity {
     this.set("address", Value.fromBytes(value));
   }
 
-  get manas(): Array<string> {
+  get manas(): Array<string> | null {
     let value = this.get("manas");
-    return value!.toStringArray();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
   }
 
-  set manas(value: Array<string>) {
-    this.set("manas", Value.fromStringArray(value));
+  set manas(value: Array<string> | null) {
+    if (!value) {
+      this.unset("manas");
+    } else {
+      this.set("manas", Value.fromStringArray(<Array<string>>value));
+    }
   }
 
-  get bags(): Array<string> {
+  get bags(): Array<string> | null {
     let value = this.get("bags");
-    return value!.toStringArray();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
   }
 
-  set bags(value: Array<string>) {
-    this.set("bags", Value.fromStringArray(value));
+  set bags(value: Array<string> | null) {
+    if (!value) {
+      this.unset("bags");
+    } else {
+      this.set("bags", Value.fromStringArray(<Array<string>>value));
+    }
+  }
+
+  get adventurers(): Array<string> | null {
+    let value = this.get("adventurers");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set adventurers(value: Array<string> | null) {
+    if (!value) {
+      this.unset("adventurers");
+    } else {
+      this.set("adventurers", Value.fromStringArray(<Array<string>>value));
+    }
   }
 
   get manasHeld(): BigInt {
@@ -501,6 +728,15 @@ export class Wallet extends Entity {
     this.set("bagsHeld", Value.fromBigInt(value));
   }
 
+  get adventurersHeld(): BigInt {
+    let value = this.get("adventurersHeld");
+    return value!.toBigInt();
+  }
+
+  set adventurersHeld(value: BigInt) {
+    this.set("adventurersHeld", Value.fromBigInt(value));
+  }
+
   get joined(): BigInt {
     let value = this.get("joined");
     return value!.toBigInt();
@@ -516,8 +752,6 @@ export class Transfer extends Entity {
     super();
     this.set("id", Value.fromString(id));
 
-    this.set("mana", Value.fromString(""));
-    this.set("bag", Value.fromString(""));
     this.set("from", Value.fromString(""));
     this.set("to", Value.fromString(""));
     this.set("txHash", Value.fromBytes(Bytes.empty()));
@@ -550,22 +784,55 @@ export class Transfer extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get mana(): string {
+  get mana(): string | null {
     let value = this.get("mana");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
   }
 
-  set mana(value: string) {
-    this.set("mana", Value.fromString(value));
+  set mana(value: string | null) {
+    if (!value) {
+      this.unset("mana");
+    } else {
+      this.set("mana", Value.fromString(<string>value));
+    }
   }
 
-  get bag(): string {
+  get bag(): string | null {
     let value = this.get("bag");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
   }
 
-  set bag(value: string) {
-    this.set("bag", Value.fromString(value));
+  set bag(value: string | null) {
+    if (!value) {
+      this.unset("bag");
+    } else {
+      this.set("bag", Value.fromString(<string>value));
+    }
+  }
+
+  get adventurer(): string | null {
+    let value = this.get("adventurer");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set adventurer(value: string | null) {
+    if (!value) {
+      this.unset("adventurer");
+    } else {
+      this.set("adventurer", Value.fromString(<string>value));
+    }
   }
 
   get from(): string {
