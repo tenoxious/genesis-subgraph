@@ -55,8 +55,11 @@ export function handleTransfer(event: TransferEvent): void {
     mana.inventoryId = manaDetails.value3;
     mana.currentOwner = toWallet.id;
     mana.minted = event.block.timestamp;
+    mana.tokenURI = contract.tokenURI(tokenId);
+    if (!isZeroAddress(fromId)) {
+      mana.OGMinterAddress = toAddress;
+    }
     mana.save();
-
 
     let order = Order.load(mana.suffixId);
     if (!order) {

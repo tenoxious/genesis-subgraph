@@ -22,6 +22,8 @@ export class Mana extends Entity {
     this.set("inventoryId", Value.fromI32(0));
     this.set("currentOwner", Value.fromString(""));
     this.set("minted", Value.fromBigInt(BigInt.zero()));
+    this.set("tokenURI", Value.fromString(""));
+    this.set("OGMinterAddress", Value.fromBytes(Bytes.empty()));
   }
 
   save(): void {
@@ -111,6 +113,24 @@ export class Mana extends Entity {
   set minted(value: BigInt) {
     this.set("minted", Value.fromBigInt(value));
   }
+
+  get tokenURI(): string {
+    let value = this.get("tokenURI");
+    return value!.toString();
+  }
+
+  set tokenURI(value: string) {
+    this.set("tokenURI", Value.fromString(value));
+  }
+
+  get OGMinterAddress(): Bytes {
+    let value = this.get("OGMinterAddress");
+    return value!.toBytes();
+  }
+
+  set OGMinterAddress(value: Bytes) {
+    this.set("OGMinterAddress", Value.fromBytes(value));
+  }
 }
 
 export class Adventurer extends Entity {
@@ -132,6 +152,16 @@ export class Adventurer extends Entity {
     this.set("orderCount", Value.fromString(""));
     this.set("currentOwner", Value.fromString(""));
     this.set("minted", Value.fromBigInt(BigInt.zero()));
+    this.set("tokenURI", Value.fromString(""));
+    this.set("OGMinterAddress", Value.fromBytes(Bytes.empty()));
+    this.set("chestGM", Value.fromString(""));
+    this.set("footGM", Value.fromString(""));
+    this.set("handGM", Value.fromString(""));
+    this.set("headGM", Value.fromString(""));
+    this.set("neckGM", Value.fromString(""));
+    this.set("ringGM", Value.fromString(""));
+    this.set("waistGM", Value.fromString(""));
+    this.set("weaponGM", Value.fromString(""));
   }
 
   save(): void {
@@ -284,6 +314,96 @@ export class Adventurer extends Entity {
 
   set minted(value: BigInt) {
     this.set("minted", Value.fromBigInt(value));
+  }
+
+  get tokenURI(): string {
+    let value = this.get("tokenURI");
+    return value!.toString();
+  }
+
+  set tokenURI(value: string) {
+    this.set("tokenURI", Value.fromString(value));
+  }
+
+  get OGMinterAddress(): Bytes {
+    let value = this.get("OGMinterAddress");
+    return value!.toBytes();
+  }
+
+  set OGMinterAddress(value: Bytes) {
+    this.set("OGMinterAddress", Value.fromBytes(value));
+  }
+
+  get chestGM(): string {
+    let value = this.get("chestGM");
+    return value!.toString();
+  }
+
+  set chestGM(value: string) {
+    this.set("chestGM", Value.fromString(value));
+  }
+
+  get footGM(): string {
+    let value = this.get("footGM");
+    return value!.toString();
+  }
+
+  set footGM(value: string) {
+    this.set("footGM", Value.fromString(value));
+  }
+
+  get handGM(): string {
+    let value = this.get("handGM");
+    return value!.toString();
+  }
+
+  set handGM(value: string) {
+    this.set("handGM", Value.fromString(value));
+  }
+
+  get headGM(): string {
+    let value = this.get("headGM");
+    return value!.toString();
+  }
+
+  set headGM(value: string) {
+    this.set("headGM", Value.fromString(value));
+  }
+
+  get neckGM(): string {
+    let value = this.get("neckGM");
+    return value!.toString();
+  }
+
+  set neckGM(value: string) {
+    this.set("neckGM", Value.fromString(value));
+  }
+
+  get ringGM(): string {
+    let value = this.get("ringGM");
+    return value!.toString();
+  }
+
+  set ringGM(value: string) {
+    this.set("ringGM", Value.fromString(value));
+  }
+
+  get waistGM(): string {
+    let value = this.get("waistGM");
+    return value!.toString();
+  }
+
+  set waistGM(value: string) {
+    this.set("waistGM", Value.fromString(value));
+  }
+
+  get weaponGM(): string {
+    let value = this.get("weaponGM");
+    return value!.toString();
+  }
+
+  set weaponGM(value: string) {
+    this.set("weaponGM", Value.fromString(value));
   }
 }
 

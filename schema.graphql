@@ -7,6 +7,8 @@ type Mana @entity {
   inventoryId: Int!
   currentOwner: Wallet!
   minted: BigInt!
+  tokenURI: String!
+  OGMinterAddress: Bytes!
 }
 
 type Adventurer @entity {
@@ -25,6 +27,16 @@ type Adventurer @entity {
   orderCount: String!
   currentOwner: Wallet!
   minted: BigInt!
+  tokenURI: String!
+  OGMinterAddress: Bytes!
+  chestGM: Mana!
+  footGM: Mana!
+  handGM: Mana!
+  headGM: Mana!
+  neckGM: Mana!
+  ringGM: Mana!
+  waistGM: Mana!
+  weaponGM: Mana!
 }
 
 type Order @entity {
