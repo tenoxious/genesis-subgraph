@@ -67,7 +67,7 @@ export function handleTransfer(event: TransferEvent): void {
     adventurer.minted = event.block.timestamp;
     adventurer.tokenURI = contract.tokenURI(tokenId);
    
-    if (!isZeroAddress(fromId)) {
+    if (isZeroAddress(fromId)) {
       adventurer.OGMinterAddress = toAddress;
     }
     adventurer.save();
