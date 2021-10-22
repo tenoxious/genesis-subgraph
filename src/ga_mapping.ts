@@ -49,31 +49,6 @@ export function handleTransfer(event: TransferEvent): void {
     adventurer.currentOwner = toWallet.id;
     adventurer.save();
   } else {
-    let weaponTransfer = Transfer.load(
-      event.transaction.hash.toHex() + '-' + event.logIndex.plus(BigInt.fromI32(2)).toString()
-    ) as Transfer;
-    let chestTransfer = Transfer.load(
-      event.transaction.hash.toHex() + '-' + event.logIndex.plus(BigInt.fromI32(4)).toString()
-    )as Transfer;
-    let headTransfer = Transfer.load(
-      event.transaction.hash.toHex() + '-' + event.logIndex.plus(BigInt.fromI32(6)).toString()
-    )as Transfer;
-    let waistTransfer = Transfer.load(
-      event.transaction.hash.toHex() + '-' + event.logIndex.plus(BigInt.fromI32(8)).toString()
-    )as Transfer;
-    let footTransfer = Transfer.load(
-      event.transaction.hash.toHex() + '-' + event.logIndex.plus(BigInt.fromI32(10)).toString()
-    )as Transfer;
-    let handTransfer = Transfer.load(
-      event.transaction.hash.toHex() + '-' + event.logIndex.plus(BigInt.fromI32(12)).toString()
-    )as Transfer;
-    let neckTransfer = Transfer.load(
-      event.transaction.hash.toHex() + '-' + event.logIndex.plus(BigInt.fromI32(14)).toString()
-    )as Transfer;
-    let ringTransfer = Transfer.load(
-      event.transaction.hash.toHex() + '-' + event.logIndex.plus(BigInt.fromI32(16)).toString()
-    )as Transfer;
-
     adventurer = new Adventurer(tokenId.toString());
     let contract = GenesisAdventurer.bind(event.address);
     adventurer.chest = contract.getChest(tokenId).toString();
@@ -91,14 +66,7 @@ export function handleTransfer(event: TransferEvent): void {
     adventurer.currentOwner = toWallet.id;
     adventurer.minted = event.block.timestamp;
     adventurer.tokenURI = contract.tokenURI(tokenId);
-    adventurer.weaponGM = weaponTransfer.mana as string;
-    adventurer.chestGM = chestTransfer.mana as string;
-    adventurer.headGM = headTransfer.mana as string;
-    adventurer.waistGM = waistTransfer.mana as string;
-    adventurer.footGM = footTransfer.mana as string;
-    adventurer.handGM = handTransfer.mana as string;
-    adventurer.neckGM = neckTransfer.mana as string;
-    adventurer.ringGM = ringTransfer.mana as string;
+   
     if (!isZeroAddress(fromId)) {
       adventurer.OGMinterAddress = toAddress;
     }
