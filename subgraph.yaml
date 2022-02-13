@@ -6,7 +6,7 @@ dataSources:
     name: Loot
     network: mainnet
     source:
-      address: '0xff9c1b15b16263c61d017ee9f65c50e4ae0113d7'
+      address: "0xff9c1b15b16263c61d017ee9f65c50e4ae0113d7"
       abi: Loot
       startBlock: 13108876
     mapping:
@@ -30,6 +30,7 @@ dataSources:
     source:
       address: "0xf4b6040a4b1b30f1d1691699a8f3bf957b03e463"
       abi: GenesisMana
+      startBlock: 13108876
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -42,6 +43,8 @@ dataSources:
       abis:
         - name: GenesisMana
           file: ./abis/GenesisMana.json
+        - name: GreatLoot
+          file: ./abis/GreatLoot.json
       eventHandlers:
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
@@ -52,6 +55,7 @@ dataSources:
     source:
       address: "0x8db687aceb92c66f013e1d614137238cc698fedb"
       abi: GenesisAdventurer
+      startBlock: 13108876
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
